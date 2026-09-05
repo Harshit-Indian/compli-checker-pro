@@ -89,9 +89,11 @@ function isBlank(value: string | null | undefined) {
   return v === "" || v === "n/a" || v === "na" || v === "not found" || v === "null" || v === "-";
 }
 
-function evaluate(fields: Extracted, exempt: boolean) {
+type Status = "compliant" | "non_compliant" | "exempt";
+
+function evaluate(fields: Extracted, exempt: boolean): { violations: Violation[]; status: Status } {
   const violations: Violation[] = [];
-  if (exempt) return { violations, status: "exempt" as const };
+  if (exempt) return { violations, status: "exempt" };
 
   for (const key of FIELD_KEYS) {
     if (isBlank(fields[key])) {
@@ -128,8 +130,10 @@ function evaluate(fields: Extracted, exempt: boolean) {
     });
   }
 
-  const status = violations.some((v) => v.severity === "critical") ? "non_compliant" : "compliant";
-  return { violations, status: violations.length ? status : ("compliant" as const) };
+  const status: Status = violations.some((v) => v.severity === "critical")
+    ? "non_compliant"
+    : "compliant";
+  return { violations, status };
 }
 
 export const analyzeScan = createServerFn({ method: "POST" })
@@ -195,7 +199,7 @@ Copy values verbatim from the label. Use null when a declaration is genuinely ab
       FIELD_KEYS.map((key) => ({
         scan_id: data.scanId,
         field_key: key,
-        field_value: fields[key],
+        field_value: fields[key] ?? null,
       })),
     );
     if (fieldsError) throw new Error(fieldsError.message);
@@ -212,8 +216,8 @@ Copy values verbatim from the label. Use null when a declaration is genuinely ab
       .update({
         status: "complete",
         compliance_status: status,
-        product_name: fields["commodity_name"],
-        manufacturer_name: fields["manufacturer_name"],
+        product_name: fields["commodity_name"] ?? null,
+        manufacturer_name: fields["manufacturer_name"] ?? null,
         notes: exempt ? ((parsed["exempt_reason"] as string) ?? "Exempted package") : null,
       })
       .eq("id", data.scanId);
