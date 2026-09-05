@@ -14,16 +14,299 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      evidence_photos: {
+        Row: {
+          created_at: string
+          file_name: string | null
+          id: string
+          position: number
+          scan_id: string
+          storage_path: string
+          uploaded_by: string
+        }
+        Insert: {
+          created_at?: string
+          file_name?: string | null
+          id?: string
+          position?: number
+          scan_id: string
+          storage_path: string
+          uploaded_by: string
+        }
+        Update: {
+          created_at?: string
+          file_name?: string | null
+          id?: string
+          position?: number
+          scan_id?: string
+          storage_path?: string
+          uploaded_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evidence_photos_scan_id_fkey"
+            columns: ["scan_id"]
+            isOneToOne: false
+            referencedRelation: "scans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      extracted_fields: {
+        Row: {
+          confidence: number | null
+          created_at: string
+          field_key: string
+          field_label: string | null
+          field_value: string | null
+          id: string
+          scan_id: string
+        }
+        Insert: {
+          confidence?: number | null
+          created_at?: string
+          field_key: string
+          field_label?: string | null
+          field_value?: string | null
+          id?: string
+          scan_id: string
+        }
+        Update: {
+          confidence?: number | null
+          created_at?: string
+          field_key?: string
+          field_label?: string | null
+          field_value?: string | null
+          id?: string
+          scan_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "extracted_fields_scan_id_fkey"
+            columns: ["scan_id"]
+            isOneToOne: false
+            referencedRelation: "scans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          category: string | null
+          created_at: string
+          created_by: string
+          id: string
+          manufacturer_name: string | null
+          name: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          created_by: string
+          id?: string
+          manufacturer_name?: string | null
+          name: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          created_by?: string
+          id?: string
+          manufacturer_name?: string | null
+          name?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          organization: string | null
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id: string
+          organization?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          organization?: string | null
+        }
+        Relationships: []
+      }
+      reports: {
+        Row: {
+          created_at: string
+          generated_by: string
+          id: string
+          payload: Json
+          scan_id: string
+          summary: string | null
+          title: string | null
+        }
+        Insert: {
+          created_at?: string
+          generated_by: string
+          id?: string
+          payload?: Json
+          scan_id: string
+          summary?: string | null
+          title?: string | null
+        }
+        Update: {
+          created_at?: string
+          generated_by?: string
+          id?: string
+          payload?: Json
+          scan_id?: string
+          summary?: string | null
+          title?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reports_scan_id_fkey"
+            columns: ["scan_id"]
+            isOneToOne: false
+            referencedRelation: "scans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      scans: {
+        Row: {
+          compliance_status: Database["public"]["Enums"]["compliance_status"]
+          created_at: string
+          id: string
+          manufacturer_name: string | null
+          notes: string | null
+          product_id: string | null
+          product_name: string | null
+          scanned_at: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          compliance_status?: Database["public"]["Enums"]["compliance_status"]
+          created_at?: string
+          id?: string
+          manufacturer_name?: string | null
+          notes?: string | null
+          product_id?: string | null
+          product_name?: string | null
+          scanned_at?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          compliance_status?: Database["public"]["Enums"]["compliance_status"]
+          created_at?: string
+          id?: string
+          manufacturer_name?: string | null
+          notes?: string | null
+          product_id?: string | null
+          product_name?: string | null
+          scanned_at?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scans_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      violations: {
+        Row: {
+          created_at: string
+          description: string | null
+          field_key: string | null
+          id: string
+          rule_reference: string
+          scan_id: string
+          severity: Database["public"]["Enums"]["violation_severity"]
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          field_key?: string | null
+          id?: string
+          rule_reference: string
+          scan_id: string
+          severity?: Database["public"]["Enums"]["violation_severity"]
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          field_key?: string | null
+          id?: string
+          rule_reference?: string
+          scan_id?: string
+          severity?: Database["public"]["Enums"]["violation_severity"]
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "violations_scan_id_fkey"
+            columns: ["scan_id"]
+            isOneToOne: false
+            referencedRelation: "scans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      can_access_scan: { Args: { _scan_id: string }; Returns: boolean }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      owns_scan: { Args: { _scan_id: string }; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "inspector" | "manufacturer" | "admin"
+      compliance_status: "compliant" | "non_compliant" | "exempt" | "pending"
+      violation_severity: "critical" | "minor"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +433,10 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["inspector", "manufacturer", "admin"],
+      compliance_status: ["compliant", "non_compliant", "exempt", "pending"],
+      violation_severity: ["critical", "minor"],
+    },
   },
 } as const
