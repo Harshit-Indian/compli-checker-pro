@@ -25,7 +25,7 @@ export const Route = createFileRoute("/_authenticated/scan")({
       },
     ],
   }),
-  component: NewScan;
+  component: NewScan,
 });
 
 async function toCompressedDataUrl(file: File): Promise<string> {
